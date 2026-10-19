@@ -19,6 +19,8 @@ export const phaseHints: PhaseHint[] = [
   { levelMin: 10, levelMax: 30, text: "Dungeonquests geben in Forever weiterhin Bonus-XP, aber in der Beta nur noch halb so viel – Dungeons nur mitnehmen, wenn sie auf dem Weg liegen.", verification: v.beta(["kotaku-beta-changes", "zockify-roadmap"]) },
   { levelMin: 1, levelMax: 60, text: "Gekochtes Essen gibt in Forever einen kleinen XP-Bonus – Buff-Essen lohnt sich doppelt.", verification: v.beta(["zockify-professions", "wf-experience"]) },
   { levelMin: 1, levelMax: 60, text: "Erholung (Rested XP) gilt nur für Kills, nicht für Quests. Ausloggen im Gasthaus oder Lager lohnt sich.", verification: v.beta(["wf-experience"]) },
+  { levelMin: 1, levelMax: 60, text: "Gegner regenerieren außerhalb des Kampfes wieder Leben (Beta-Fix 15. Okt.) – Kämpfe nicht abbrechen und später fortsetzen.", verification: v.beta(["iv-oct15", "blizz-devnotes"]) },
+  { levelMin: 24, levelMax: 30, text: "Allianz: Die neue Fähre Menethil ↔ Süderstade ↔ Auberdine spart den Fußweg zwischen Sumpfland, Vorgebirge und Dunkelküste.", verification: v.beta(["gamesgg-wetlands"]) },
   { levelMin: 20, levelMax: 30, text: "Im Sumpfland die neuen Forever-Quests priorisieren – klassische Sumpfland-Lücken sind dadurch geschlossen.", verification: v.confirmed(["outputlag-wetlands"]) },
   { levelMin: 35, levelMax: 45, text: "Riverglades statt verstreuter 40er-Gebiete: eine Zone mit über 150 Quests spart Reisewege.", verification: v.confirmed(["wiki-forever"]) },
   { levelMin: 38, levelMax: 42, text: "Gold für das Reittier zurücklegen (Reiten klassisch ab 40). Teure Ausbildung erst danach planen.", verification: v.classic("Reittier-Stufe aus Classic, für Forever nicht bestätigt.") },
@@ -29,7 +31,8 @@ export const phaseHints: PhaseHint[] = [
   { levelMin: 1, levelMax: 19, classId: "paladin", text: "Bis Siegel des Befehls ist der Paladin langsam – Questwaffen-Upgrades haben Priorität.", verification: v.beta(["cc-paladin-leveling"]) },
   { levelMin: 20, levelMax: 40, classId: "paladin", text: "Siegel aktiv halten, Richturteil + Holy Strike auf Abklingzeit, Mana als Lebensreserve betrachten.", verification: v.beta(["iv-ret-paladin"]) },
   { levelMin: 1, levelMax: 19, classId: "priest", text: "Zauberstab ist dein wichtigstes Item – Upgrades im AH oder per Verzauberkunst.", verification: v.provisional(["zockify-priest"]) },
-  { levelMin: 20, levelMax: 60, classId: "priest", text: "Schild → Schmerz → Gedankenschlag → Gedankenschinden. Mit Willensentzug ohne Pause weiterziehen.", verification: v.provisional(["zockify-priest", "mobalytics-priest"]) },
+  { levelMin: 20, levelMax: 60, classId: "priest", text: "Schild → Schmerz → Gedankenschlag → Verschlingende Seuche (24 s) → Gedankenschinden. Mit Willensentzug ohne Pause weiterziehen.", verification: v.provisional(["zockify-priest", "mobalytics-priest", "lfcarry-patch-notes"]) },
+  { levelMin: 1, levelMax: 30, classId: "priest", text: "Zauberstab braucht 0,5 s Stillstand vor dem Schuss – erst anhalten, dann feuern.", verification: v.beta(["iv-oct15"]) },
 ];
 
 export function hintsFor(level: number, classId: ClassId): PhaseHint[] {

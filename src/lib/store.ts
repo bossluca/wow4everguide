@@ -6,6 +6,7 @@ import {
   STORAGE_KEY,
   clampLevel,
   clampSkill,
+  clampXp,
   createDefaultState,
   parseProgress,
   type ProgressState,
@@ -13,6 +14,7 @@ import {
 } from "./progress";
 import { PRIMARY_PROFESSION_LIMIT } from "@/data/professions";
 import { raceById } from "@/data/races";
+import { levelFromTotalXp, totalXp } from "@/data/xp";
 import type { ClassId, Faction, ProfessionId, RaceId } from "./types";
 
 type Listener = () => void;
@@ -115,7 +117,30 @@ export const actions = {
     setProgress((s) => ({ ...s, settings: { ...s.settings, raceId } }));
   },
   setLevel(level: number) {
-    setProgress((s) => ({ ...s, settings: { ...s.settings, level: clampLevel(level) } }));
+    setProgress((s) => {
+      const lvl = clampLevel(level);
+      return { ...s, settings: { ...s.settings, level: lvl, xp: clampXp(s.settings.xp, lvl) } };
+    });
+  },
+  setXp(xp: number) {
+    setProgress((s) => ({ ...s, settings: { ...s.settings, xp: clampXp(xp, s.settings.level) } }));
+  },
+  /** Addiert XP (z. B. Questbelohnung) und steigt bei Bedarf automatisch Stufen auf. */
+  addXp(amount: number) {
+    if (!Number.isFinite(amount) || amount <= 0) return;
+    setProgress((s) => {
+      const next = levelFromTotalXp(totalXp(s.settings.level, s.settings.xp) + Math.round(amount));
+      return { ...s, settings: { ...s.settings, level: next.level, xp: next.xp } };
+    });
+  },
+  startSession() {
+    setProgress((s) => ({
+      ...s,
+      session: { startedAt: Date.now(), startTotalXp: totalXp(s.settings.level, s.settings.xp) },
+    }));
+  },
+  stopSession() {
+    setProgress((s) => ({ ...s, session: null }));
   },
   setCurrentZone(zoneId: string | null) {
     setProgress((s) => ({ ...s, settings: { ...s.settings, currentZoneId: zoneId } }));
