@@ -12,7 +12,7 @@ Fortschritt mit lokaler Speicherung. Keine Anmeldung, keine Datenbank, kein Back
 
 | Bereich | Inhalt |
 | --- | --- |
-| **Dashboard** | Stufe und Fortschritt bis 60, Klasse/Fraktion, aktuelles und nächstes Gebiet, nächste Aufgaben (abhakbar), Quest-Hubs, Sammelressourcen mit Skill-Abgleich, Hinweise zur Levelphase, Schnellbutton „Nächste Aufgabe erledigt“ |
+| **Dashboard** | Stufe und XP-basierter Fortschritt bis 60, XP-Tracker (XP nachtragen mit automatischem Stufenaufstieg, Sitzung mit XP/Stunde und Restzeit-Schätzung), Klasse/Fraktion, aktuelles und nächstes Gebiet, nächste Aufgaben (abhakbar), Quest-Hubs, Sammelressourcen mit Skill-Abgleich, Hinweise zur Levelphase, Schnellbutton „Nächste Aufgabe erledigt“ |
 | **Levelroute** | 21 Allianz- und 19 Horde-Abschnitte von 1–60 mit Stationen, Hubs, Questketten, optionalen Dungeons, Reisewegen, Trainern, Berufshinweisen, Warnungen, Wechselkriterien und Datenlücken. Filter: Fraktion, Klasse, Level, Gebiet, Volltextsuche, nur offene/wichtige, eigener Startzweig |
 | **Klassen** | Vergleichstabelle über 9 Kriterien, begründete Empfehlung, pro Klasse: Solo-Spezialisierung, Talent-Meilensteine, Fähigkeiten mit Trainingsstufen, Kampfablauf, Ressourcen, schwierige Gegner, Ausrüstung, Alternative, Forever-Änderungen |
 | **Berufe & Gold** | Empfehlung pro Klasse, Vergleich von 6 Kombinationen nach 5 Zielen, eigene Berufe/Skills (2 Hauptberufe + Nebenberufe), Ressourcen pro Gebiet inkl. „Umweg lohnt?“, Ressourcen-Finder, Gold-/Materialplan je Levelabschnitt, Rezepte |
@@ -70,6 +70,7 @@ src/
     zones.ts resources.ts dungeons.ts quests.ts races.ts
     route/alliance.ts route/horde.ts
     classes.ts professions.ts hints.ts gaps.ts
+    xp.ts              XP-Tabelle 1–60 (Classic-identisch, für Forever bestätigt)
   lib/
     types.ts           Typisierte Datenmodelle
     progress.ts        Speicherformat, Validierung/Normalisierung für Import
@@ -105,8 +106,8 @@ geprüft wurde über Suchergebnis-Auszüge. Widersprüchliche Angaben sind in de
 ## Bekannte Grenzen und Datenlücken
 
 - Namen und Reihenfolge der über 1.000 neuen Forever-Quests sind größtenteils unbekannt → die Route nutzt klassische Questketten als Gerüst (gekennzeichnet).
-- Riverglades: Hubs, Flugpunkte, Quests und Ressourcen fehlen; Shen'dralas: Levelbereich unbestätigt.
-- Neue Sumpfland- und Desolace-Quests nicht namentlich bekannt; nur 5 der 9 neuen Dungeons erfasst.
+- Riverglades: Hubs und Flugrouten aus Beta-Guides bekannt, Quests und Ressourcen fehlen; Shen'dralas: Levelbereich unbestätigt.
+- Neue Sumpfland- und Desolace-Quests nicht namentlich bekannt; die vier neuen Dungeons ab Stufe 40 nur aus Übersichten (in der Beta nicht spielbar).
 - Forever-Talentbäume (v. a. Druide) stark überarbeitet → nur mehrfach belegte Talente, sonst Verweis auf den Talentrechner.
 - Keine Auktionshauspreise (Spiel noch nicht veröffentlicht) → Goldhinweise sind allgemeine Einschätzungen.
 - Flugpunkte und Ressourcen-Skillstufen sind Classic-Referenz.

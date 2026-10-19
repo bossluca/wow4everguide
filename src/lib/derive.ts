@@ -4,6 +4,7 @@ import { routes } from "@/data/route";
 import { zoneById } from "@/data/zones";
 import { resourceById, skinningSkillForLevel } from "@/data/resources";
 import { raceById } from "@/data/races";
+import { XP_TOTAL_TO_60, totalXp, xpForLevel } from "@/data/xp";
 
 /** Gilt eine Station für die gewählte Klasse? */
 export function stepAppliesToClass(step: RouteStep, classId: ClassId): boolean {
@@ -191,4 +192,53 @@ export function skinningRangeForZone(zoneId: string): [number, number] | undefin
   const zone = zoneById.get(zoneId);
   if (!zone?.skinnableLevels) return undefined;
   return [skinningSkillForLevel(zone.skinnableLevels[0]), skinningSkillForLevel(zone.skinnableLevels[1])];
+}
+
+export interface XpProgress {
+  total: number;
+  totalTo60: number;
+  remainingTo60: number;
+  percentTo60: number;
+  levelNeeded: number;
+  levelPercent: number;
+}
+
+/** XP-basierter Fortschritt – genauer als Stufen, weil höhere Stufen deutlich mehr XP kosten. */
+export function xpProgress(level: number, xpInLevel: number): XpProgress {
+  const total = totalXp(level, xpInLevel);
+  const needed = xpForLevel(level);
+  return {
+    total,
+    totalTo60: XP_TOTAL_TO_60,
+    remainingTo60: XP_TOTAL_TO_60 - total,
+    percentTo60: Math.floor((total / XP_TOTAL_TO_60) * 1000) / 10,
+    levelNeeded: needed,
+    levelPercent: needed ? Math.floor((Math.min(xpInLevel, needed) / needed) * 100) : 100,
+  };
+}
+
+export interface SessionStats {
+  gained: number;
+  minutes: number;
+  xpPerHour: number;
+  /** Minuten bis zur nächsten Stufe bei aktuellem Tempo (null = keine Schätzung) */
+  minutesToNextLevel: number | null;
+  hoursTo60: number | null;
+}
+
+/** Sitzungsstatistik. Schätzungen erst ab 5 Minuten und echtem XP-Gewinn. */
+export function sessionStats(state: ProgressState, now: number): SessionStats | null {
+  if (!state.session) return null;
+  const { level, xp } = state.settings;
+  const progress = xpProgress(level, xp);
+  const gained = Math.max(0, progress.total - state.session.startTotalXp);
+  const minutes = Math.max(0, (now - state.session.startedAt) / 60000);
+  const xpPerHour = minutes >= 5 && gained > 0 ? Math.round(gained / (minutes / 60)) : 0;
+  return {
+    gained,
+    minutes,
+    xpPerHour,
+    minutesToNextLevel: xpPerHour && level < 60 ? Math.ceil(((progress.levelNeeded - xp) / xpPerHour) * 60) : null,
+    hoursTo60: xpPerHour && level < 60 ? Math.round((progress.remainingTo60 / xpPerHour) * 10) / 10 : null,
+  };
 }

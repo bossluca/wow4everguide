@@ -58,6 +58,18 @@ async function newPage(viewport) {
   check(stored.settings?.faction === "horde" && stored.settings?.level === 15, "Einstellungen nach Reload gespeichert");
   check(Object.keys(stored.completedSteps ?? {}).length === 1, "Erledigte Aufgabe nach Reload gespeichert");
 
+  // XP-Tracker: XP hinzufügen mit automatischem Stufenaufstieg, Sitzung
+  await page.getByLabel("XP hinzufügen (z. B. Questbelohnung)").fill("20000");
+  await page.getByRole("button", { name: "XP hinzufügen" }).click();
+  let xpState = await page.evaluate(() => JSON.parse(localStorage.getItem("wowf-companion:v1")).settings);
+  check(xpState.level === 16 && xpState.xp === 5600, `XP-Tracker steigt automatisch auf (Stufe ${xpState.level}, ${xpState.xp} XP)`);
+  await page.getByRole("button", { name: "Sitzung starten" }).click();
+  check(await page.getByRole("button", { name: "Sitzung beenden" }).isVisible(), "Sitzung startet");
+  await page.getByRole("button", { name: "Sitzung beenden" }).click();
+  await page.getByRole("spinbutton", { name: "Aktuelle Stufe" }).first().fill("15");
+  xpState = await page.evaluate(() => JSON.parse(localStorage.getItem("wowf-companion:v1")).settings);
+  check(xpState.level === 15, "Stufe wieder auf 15 gesetzt");
+
   // Routenfilter
   await page.goto(BASE + "/route", { waitUntil: "networkidle" });
   const before = await page.locator("[id^='h-']").count();

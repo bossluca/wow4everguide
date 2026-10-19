@@ -95,3 +95,36 @@ describe("Store & Persistenz", () => {
     expect(JSON.parse(localStorage.getItem(STORAGE_KEY)!).settings.raceId).toBeNull();
   });
 });
+
+describe("XP-Aktionen", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    act(() => actions.reset());
+  });
+
+  it("addXp steigt automatisch auf", () => {
+    act(() => {
+      actions.setLevel(1);
+      actions.addXp(1500); // 400 (1→2) + 900 (2→3) + 200
+    });
+    const s = JSON.parse(localStorage.getItem(STORAGE_KEY)!);
+    expect(s.settings.level).toBe(3);
+    expect(s.settings.xp).toBe(200);
+  });
+
+  it("Stufenänderung begrenzt XP", () => {
+    act(() => {
+      actions.setLevel(20);
+      actions.setXp(20000);
+      actions.setLevel(2);
+    });
+    expect(JSON.parse(localStorage.getItem(STORAGE_KEY)!).settings.xp).toBe(899);
+  });
+
+  it("Sitzung startet und stoppt", () => {
+    act(() => actions.startSession());
+    expect(JSON.parse(localStorage.getItem(STORAGE_KEY)!).session).not.toBeNull();
+    act(() => actions.stopSession());
+    expect(JSON.parse(localStorage.getItem(STORAGE_KEY)!).session).toBeNull();
+  });
+});
