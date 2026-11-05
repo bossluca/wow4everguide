@@ -1,10 +1,10 @@
 # Forever Companion – WoW Forever Leveling 1–60
 
 Minimalistische Web-App, die Solo-Spieler durch die Levelphase von **World of Warcraft: Forever** führt:
-Levelroute für Allianz und Horde, Klassenvergleich (Paladin, Priester, Druide), Berufe- und Goldplanung,
+Levelroute für Allianz und Horde, Klassenvergleich (Paladin, Priester, Druide, Hexenmeister; Mensch-Paladin und Mensch-Hexenmeister sind vorbereitet), Berufe- und Goldplanung,
 Fortschritt mit lokaler Speicherung. Keine Anmeldung, keine Datenbank, kein Backend.
 
-> **Datenstand:** 19.10.2026, kurz vor dem Release am 4.11.2026 (Beta bis 21.10., Level-Cap der Beta 30).
+> **Datenstand:** 05.11.2026 (Forever ist seit dem 4.11.2026 spielbar). Ältere Einträge tragen ihr eigenes Prüfdatum; das Spiel ist erst einen Tag alt, viele Details stammen noch aus der Beta (Cap 30) und aus Drittquellen.
 > Viele Forever-Details sind noch nicht öffentlich dokumentiert. Die App kennzeichnet jeden Datensatz
 > mit einem Verifikationsstatus und zeigt Lücken offen an, statt Inhalte zu erfinden.
 
@@ -14,7 +14,7 @@ Fortschritt mit lokaler Speicherung. Keine Anmeldung, keine Datenbank, kein Back
 | --- | --- |
 | **Dashboard** | Stufe und XP-basierter Fortschritt bis 60, XP-Tracker (XP nachtragen mit automatischem Stufenaufstieg, Sitzung mit XP/Stunde und Restzeit-Schätzung), Klasse/Fraktion, aktuelles und nächstes Gebiet, nächste Aufgaben (abhakbar), Quest-Hubs, Sammelressourcen mit Skill-Abgleich, Hinweise zur Levelphase, Schnellbutton „Nächste Aufgabe erledigt“ |
 | **Levelroute** | 21 Allianz- und 19 Horde-Abschnitte von 1–60 mit Stationen, Hubs, Questketten, optionalen Dungeons, Reisewegen, Trainern, Berufshinweisen, Warnungen, Wechselkriterien und Datenlücken. Filter: Fraktion, Klasse, Level, Gebiet, Volltextsuche, nur offene/wichtige, eigener Startzweig |
-| **Klassen** | Vergleichstabelle über 9 Kriterien, begründete Empfehlung, pro Klasse: Solo-Spezialisierung, Talent-Meilensteine, Fähigkeiten mit Trainingsstufen, Kampfablauf, Ressourcen, schwierige Gegner, Ausrüstung, Alternative, Forever-Änderungen |
+| **Klassen** | Paladin, Priester, Druide, Hexenmeister; Vergleichstabelle über 9 Kriterien, begründete Empfehlung, pro Klasse: Solo-Spezialisierung, Talent-Meilensteine, Fähigkeiten mit Trainingsstufen, Kampfablauf, Ressourcen, schwierige Gegner, Ausrüstung, Alternative, Forever-Änderungen |
 | **Berufe & Gold** | Empfehlung pro Klasse, Vergleich von 6 Kombinationen nach 5 Zielen, eigene Berufe/Skills (2 Hauptberufe + Nebenberufe), Ressourcen pro Gebiet inkl. „Umweg lohnt?“, Ressourcen-Finder, Gold-/Materialplan je Levelabschnitt, Rezepte |
 | **Fortschritt** | Charakter (Stufe, Fraktion, Klasse, Volk, Gebiet), Fortschritt pro Gebiet, offene/erledigte Aufgaben, Notizen, JSON-Export/-Import, Zurücksetzen mit Bestätigungsdialog |
 | **Quellen & Lücken** | Verifikationslegende, gesicherte Forever-Fakten, Liste offener Datenlücken, Quellenübersicht (Titel, URL, Thema, Prüfdatum) |
@@ -26,6 +26,21 @@ Menü-Sheet auf dem Smartphone. Klasse und Fraktion lassen sich jederzeit wechse
 
 Next.js 16 (App Router, Turbopack) · TypeScript · Tailwind CSS 4 · shadcn/ui (Radix, Stil „new-york“) · Lucide Icons ·
 localStorage · Vitest + Testing Library · Playwright (Smoke-Test)
+
+## Offline-Version (reines HTML, ohne Server)
+
+```bash
+npm run export          # erzeugt den Ordner out/
+```
+
+Danach `out/index.html` per Doppelklick im Browser öffnen. Der Ordner `out/` ist eigenständig und lässt sich zippen und
+weitergeben (z. B. an Kollegen), ohne Node.js oder Installation. Hinweise:
+
+- **Chrome/Edge empfohlen.** Firefox teilt `localStorage` nicht zwischen `file://`-Seiten – dort stattdessen `npm run serve:offline`
+  (Mini-Server auf http://localhost:4173) nutzen.
+- Der Fortschritt liegt pro Browser; zum Umziehen auf der Seite „Fortschritt“ exportieren und importieren.
+- Schriften sind eingebettet, die Offline-Version braucht kein Internet.
+- Prüfung der Offline-Version: `npm run export && npm run e2e:offline`.
 
 ## Installation & Start
 
@@ -111,6 +126,8 @@ geprüft wurde über Suchergebnis-Auszüge. Widersprüchliche Angaben sind in de
 - Forever-Talentbäume (v. a. Druide) stark überarbeitet → nur mehrfach belegte Talente, sonst Verweis auf den Talentrechner.
 - Keine Auktionshauspreise (Spiel noch nicht veröffentlicht) → Goldhinweise sind allgemeine Einschätzungen.
 - Flugpunkte und Ressourcen-Skillstufen sind Classic-Referenz.
+- Klassenquests (Paladin Stufe 12, Hexenmeister-Pets, Reittiere ab 40) sind Classic-Referenz; Hexenmeister-Talente nur aus Drittquellen, Guides widersprechen sich.
+- Launch-Details (kein Dungeon Finder, XP-Änderungen, Raid-Termine) stammen aus Fan-Seiten.
 
 Die aktuelle Liste pflegt `src/data/gaps.ts`.
 

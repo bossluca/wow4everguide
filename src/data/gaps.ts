@@ -1,9 +1,11 @@
 import type { DataGap, Verification } from "@/lib/types";
-import { v } from "./verify";
+import { dated, v } from "./verify";
 
 /** Gesicherte Rahmendaten zu WoW Forever, die in der App angezeigt werden. */
 export const foreverFacts: { text: string; verification: Verification }[] = [
-  { text: "Release am 4. November 2026 (15:00 PST); Beta vom 17. September bis 21. Oktober 2026.", verification: v.confirmed(["blizz-beta-live", "wiki-forever"]) },
+  { text: "WoW Forever ist seit dem 4. November 2026 (15:00 PST) spielbar; die Beta lief vom 17. September bis Oktober 2026. Alle Charaktere starten auf Stufe 1, nichts aus der Beta wird übernommen.", verification: dated(v.beta(["foreverera-launch", "timesaver-launch", "blizz-beta-live"], "Launch-Details aus Drittquellen; offizielle Launch-Notizen nicht direkt geprüft.", "Launch 4. Nov. 2026")) },
+  { text: "Laut Berichten gibt es zum Launch keinen Dungeon Finder, keine Charakter-Boosts und keine WoW-Marke. Dungeons laufen daher mit eigener Gruppe (Chat, Gilde, Freunde).", verification: dated(v.provisional(["foreverera-launch", "timesaver-launch"], "Nur Fan-Seiten; nicht offiziell bestätigt.")) },
+  { text: "Dungeon-Gegner geben weniger XP, Quest-XP steigt (auch beim ersten Abschluss eines Dungeons). Die ersten Raids (Barrow Deeps, Hyjal Summit, Onyxia's Lair) sind für den 9. Dezember 2026 angekündigt.", verification: dated(v.provisional(["timesaver-launch", "foreverera-launch"], "Drittquellen; Zahlen und Termine können abweichen.")) },
   { text: "Level-Cap 60. Die Beta war zuletzt auf Stufe 30 begrenzt (Erhöhung am 1. Oktober).", verification: v.confirmed(["blizz-beta-live", "kotaku-beta-changes"]) },
   { text: "XP-Bedarf pro Stufe identisch zu Classic (laut Blizzard im September bestätigt).", verification: v.beta(["wf-experience"], "Aussage über Drittquelle zitiert.") },
   { text: "Dungeonquests: Bonus-XP in der Beta um 50 % gesenkt (1. Okt.), später Dungeon-Kill-XP um ca. 20 % erhöht (8. Okt.).", verification: v.beta(["kotaku-beta-changes", "zockify-roadmap"], "Okt.-8-Änderung nur aus einer Quelle.") },
@@ -30,5 +32,8 @@ export const dataGaps: DataGap[] = [
   { id: "gap-recipes", area: "Berufe", text: "Über 600 neue Rezepte laut Beta-Datenauszügen, aber keine offizielle Liste. Konkrete neue Rezepte sind nur vereinzelt erfasst.", impact: "mittel" },
   { id: "gap-prices", area: "Gold", text: "Keine Auktionshauspreise verfügbar (Spiel noch nicht veröffentlicht). Alle Goldhinweise sind allgemeine Einschätzungen.", impact: "mittel" },
   { id: "gap-flightpaths", area: "Reisewege", text: "Flugpunkte sind Classic-Referenz; neue Forever-Verbindungen (Riverglades-Flugpunkte, Fähr-Schleife Menethil–Süderstade–Auberdine, Steamwheedle Port) stammen aus Beta-Guides.", impact: "mittel" },
+  { id: "gap-classquests", area: "Klassenquests", text: "Klassenquests (Paladin Stufe 12, Hexenmeister-Pets auf 10/20/30, Reittiere auf 40) sind Classic-Referenz. Forever-Änderungen, genaue Trainer und Kosten nicht geprüft.", impact: "mittel" },
+  { id: "gap-warlock", area: "Hexenmeister", text: "Talentreihenfolge und Wirkung der 17 neuen Talente sind nur aus Drittquellen bekannt, Guides widersprechen sich. Trainerorte und Pet-Fähigkeiten aus Classic.", impact: "hoch" },
+  { id: "gap-launch", area: "Launch-Daten", text: "Launch-Details (kein Dungeon Finder, XP-Änderungen, Raid-Termine) stammen aus Fan-Seiten; offizielle Launch-Notizen waren nicht abrufbar.", impact: "mittel" },
   { id: "gap-access", area: "Recherche", text: "Quellseiten konnten aus der Build-Umgebung nicht im Volltext geladen werden; geprüft wurde über Suchergebnis-Auszüge.", impact: "mittel" },
 ];

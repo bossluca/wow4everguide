@@ -9,9 +9,12 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { navItems } from "./nav-items";
+import { DATA_UPDATED_AT } from "@/data/verify";
 import { ThemeToggle } from "./theme-toggle";
 import { PlayerStatus } from "./player-status";
 import { SearchDialog } from "./search-dialog";
+
+const formatDate = (iso: string) => iso.split("-").reverse().join(".");
 
 function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = normalizePath(usePathname());
@@ -66,7 +69,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="mt-auto space-y-2">
           <PlayerStatus />
           <div className="flex items-center justify-between px-1 text-xs text-muted-foreground">
-            <span>Daten: Stand 19.10.2026</span>
+            <span>Daten: Stand {formatDate(DATA_UPDATED_AT)}</span>
             <ThemeToggle />
           </div>
         </div>

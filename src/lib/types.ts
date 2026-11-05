@@ -79,7 +79,7 @@ export interface Dungeon {
   levelMax: number;
   isNew: boolean;
   faction: Faction | "both";
-  /** Lohnt sich der Dungeon für entspanntes Solo-Leveling (via Gruppensuche)? */
+  /** Lohnt sich der Dungeon für entspanntes Solo-Leveling (mit eigener Gruppe)? */
   soloValue: "high" | "medium" | "low";
   valueNote: string;
   verification: Verification;
@@ -133,7 +133,7 @@ export interface RouteSection {
   verification: Verification;
 }
 
-export type ClassId = "paladin" | "priest" | "druid";
+export type ClassId = "paladin" | "priest" | "druid" | "warlock";
 export type RaceId =
   | "human"
   | "dwarf"

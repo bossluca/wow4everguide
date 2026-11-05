@@ -52,7 +52,7 @@ export function createDefaultState(): ProgressState {
 }
 
 const FACTIONS: Faction[] = ["alliance", "horde"];
-const CLASSES: ClassId[] = ["paladin", "priest", "druid"];
+const CLASSES: ClassId[] = ["paladin", "priest", "druid", "warlock"];
 const SECONDARY: SecondaryProfessionId[] = ["cooking", "fishing", "firstaid"];
 
 export function clampLevel(level: number): number {

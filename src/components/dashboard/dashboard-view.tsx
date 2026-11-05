@@ -45,7 +45,7 @@ function DashboardContent() {
   const curZone = cur ? zoneById.get(cur.zoneId) : undefined;
   const nextZone = next ? zoneById.get(next.zoneId) : undefined;
   const curProgress = cur ? sectionProgress(cur, state.completedSteps, classId) : undefined;
-  const hints = hintsFor(level, classId);
+  const hints = hintsFor(level, classId, raceId);
   const isFresh = state.updatedAt.startsWith("1970");
   const rec = professionRecommendation[classId];
   const recCombo = professionCombos.find((c) => c.id === rec.comboId);

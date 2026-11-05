@@ -1,4 +1,4 @@
-import type { GoldPlanBracket, Profession, ProfessionCombo, ProfessionId, Recipe } from "@/lib/types";
+import type { ClassId, GoldPlanBracket, Profession, ProfessionCombo, ProfessionId, Recipe } from "@/lib/types";
 import { v } from "./verify";
 
 const classicProf = v.classic("Grundregeln aus Classic Era (zwei Hauptberufe, Nebenberufe frei).", ["zockify-professions"]);
@@ -160,7 +160,7 @@ export const professionCombos: ProfessionCombo[] = [
     scores: { gold: "sehr gut", wege: "gut", kosten: "sehr gut", eigennutzen: "schwach", level60: "mittel" },
     pros: ["Beide Ressourcen liegen auf der Route.", "Keine Trainer- oder Materialkosten außer Lehrgebühren.", "Verkauf ins AH oder Vorrat für späteren Herstellungsberuf."],
     cons: ["In Classic kann nur eine Suche (Kräuter ODER Erze) gleichzeitig aktiv sein – ständiges Umschalten.", "Kein Eigennutzen beim Leveln."],
-    bestFor: ["paladin", "priest", "druid"],
+    bestFor: ["paladin", "priest", "druid", "warlock"],
     verification: v.provisional(["zockify-professions", "classic-reference"], "Allgemeine Einschätzung ohne Auktionshausdaten."),
   },
   {
@@ -182,7 +182,7 @@ export const professionCombos: ProfessionCombo[] = [
     scores: { gold: "gut", wege: "sehr gut", kosten: "gut", eigennutzen: "gut", level60: "sehr gut" },
     pros: ["Selbstversorgt: Kräuter direkt verarbeiten.", "Manatränke und Elixiere für Elites.", "Auf 60 Fläschchen/Transmutes."],
     cons: ["Heiltränke in Forever bei Erster Hilfe (Beta).", "Skillen frisst Kräuter, die sonst Gold bringen."],
-    bestFor: ["priest", "druid"],
+    bestFor: ["priest", "druid", "warlock"],
     verification: v.beta(["iv-firstaid-potions", "zockify-professions"], "Erste-Hilfe-Änderung aus der Beta; Goldbewertung allgemeine Einschätzung."),
   },
   {
@@ -215,13 +215,13 @@ export const professionCombos: ProfessionCombo[] = [
     scores: { gold: "schwach", wege: "sehr gut", kosten: "mittel", eigennutzen: "gut", level60: "gut" },
     pros: ["Stoff droppt kostenlos.", "Magische Zauberstäbe früh selbst herstellen.", "Eigene Grüne entzaubern statt verkaufen."],
     cons: ["Kaum Einnahmen beim Leveln.", "Verzauberkunst skillt nur mit vielen grünen Items."],
-    bestFor: ["priest"],
+    bestFor: ["priest", "warlock"],
     verification: v.classic("Klassisches Muster; Forever-Rezepte nicht geprüft."),
   },
 ];
 
 /** Hauptempfehlung je Klasse – leicht änderbar. */
-export const professionRecommendation: Record<"paladin" | "priest" | "druid", { comboId: string; at60: string; why: string }> = {
+export const professionRecommendation: Record<ClassId, { comboId: string; at60: string; why: string }> = {
   druid: {
     comboId: "herb-skinning",
     at60: "Kürschnerei → Alchemie tauschen (Kräuter selbst verarbeiten).",
@@ -231,6 +231,11 @@ export const professionRecommendation: Record<"paladin" | "priest" | "druid", { 
     comboId: "herb-mining",
     at60: "Optional Kräuterkunde → Schmiedekunst, wenn Forever-Rezepte überzeugen.",
     why: "Gold bei null Zusatzaufwand; Schmiedekunst lohnt erst, wenn du gezielt Waffen bauen willst.",
+  },
+  warlock: {
+    comboId: "herb-mining",
+    at60: "Bergbau → Schneiderei (Stoffrüstung, Taschen) oder Alchemie.",
+    why: "Hexenmeister tragen Stoff und brauchen kein Leder; Gold bei null Zusatzaufwand, Schneiderei lohnt erst auf 60.",
   },
   priest: {
     comboId: "herb-mining",

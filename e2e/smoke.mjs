@@ -123,7 +123,23 @@ async function newPage(viewport) {
 
   // Ungültiger Import
   await page.getByTestId("import-input").setInputFiles({ name: "bad.json", mimeType: "application/json", buffer: Buffer.from("{\"version\":7}") });
-  check(await page.getByText(/Nicht unterstützte Version/).isVisible(), "Ungültiger Import wird abgelehnt");
+  await page.getByText(/Nicht unterstützte Version/).waitFor();
+  check(true, "Ungültiger Import wird abgelehnt");
+
+  // Mensch-Hexenmeister: Klasse und Volk wählen, klassenspezifische Route
+  await page.getByRole("combobox", { name: "Fraktion" }).click();
+  await page.getByRole("option", { name: "Allianz" }).click();
+  await page.getByRole("combobox", { name: "Klasse" }).click();
+  await page.getByRole("option", { name: "Hexenmeister" }).click();
+  await page.getByRole("combobox", { name: /Volk/ }).click();
+  await page.getByRole("option", { name: "Mensch" }).click();
+  s = await page.evaluate(() => JSON.parse(localStorage.getItem("wowf-companion:v1")).settings);
+  check(s.classId === "warlock" && s.raceId === "human", "Mensch-Hexenmeister auswählbar");
+  await page.goto(BASE + "/route", { waitUntil: "networkidle" });
+  await page.getByLabel("Route durchsuchen").fill("Leerwandler");
+  check(await page.getByText(/Klassenquest für den Leerwandler/).first().isVisible(), "Hexenmeister-Klassenschritt in der Route sichtbar");
+  await page.goto(BASE + "/classes?tab=warlock", { waitUntil: "networkidle" });
+  check(await page.getByText("Pet tankt, Schaden-über-Zeit-Zauber töten").isVisible(), "Hexenmeister-Klassenseite lädt");
 
   // Theme-Umschaltung
   const darkBefore = await page.evaluate(() => document.documentElement.classList.contains("dark"));
