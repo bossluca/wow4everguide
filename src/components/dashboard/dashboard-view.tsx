@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/shared/site-link";
 import { ArrowRight, CheckCheck, Compass, Hammer, Lightbulb, MapPin, Route as RouteIcon } from "lucide-react";
 import { actions, useProgress } from "@/lib/store";
 import {

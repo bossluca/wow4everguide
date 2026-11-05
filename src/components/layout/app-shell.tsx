@@ -1,7 +1,8 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/shared/site-link";
 import { usePathname } from "next/navigation";
+import { normalizePath } from "@/lib/href";
 import { useState, type ReactNode } from "react";
 import { Compass, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -13,7 +14,7 @@ import { PlayerStatus } from "./player-status";
 import { SearchDialog } from "./search-dialog";
 
 function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
-  const pathname = usePathname();
+  const pathname = normalizePath(usePathname());
   return (
     <nav className="flex flex-col gap-0.5" aria-label="Hauptnavigation">
       {navItems.map(({ href, label, icon: Icon }) => {

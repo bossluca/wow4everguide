@@ -10,7 +10,10 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "check": "npm run lint && npm run typecheck && npm run test",
-    "e2e": "node e2e/smoke.mjs"
+    "e2e": "node e2e/smoke.mjs",
+    "export": "STATIC_EXPORT=1 next build && node scripts/make-offline.mjs",
+    "serve:offline": "node scripts/serve-offline.mjs",
+    "e2e:offline": "node e2e/offline.mjs"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
