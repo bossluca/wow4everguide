@@ -4,7 +4,6 @@ import { raceById } from "@/data/races";
 import { MAX_SKILL, PRIMARY_PROFESSION_LIMIT, professionById } from "@/data/professions";
 import { xpForLevel } from "@/data/xp";
 
-export const STORAGE_KEY = "wowf-companion:v1";
 export const SCHEMA_VERSION = 1;
 
 export type SecondaryProfessionId = "cooking" | "fishing" | "firstaid";

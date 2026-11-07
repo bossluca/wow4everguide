@@ -14,6 +14,13 @@ const check = (c, m) => {
 
 const browser = await chromium.launch(executablePath ? { executablePath } : {});
 const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await page.addInitScript(() => {
+    window.__active = () => {
+      const d = JSON.parse(localStorage.getItem("wowf-companion:v2") ?? "null");
+      return d ? d.profiles.find((p) => p.id === d.activeId).state : {};
+    };
+    window.__app = () => JSON.parse(localStorage.getItem("wowf-companion:v2") ?? "null");
+  });
 const errors = [];
 page.on("pageerror", (e) => errors.push(e.message));
 page.on("console", (m) => m.type() === "error" && errors.push(m.text()));
@@ -34,7 +41,7 @@ await page.getByRole("link", { name: "Fortschritt" }).first().click();
 await page.getByRole("spinbutton", { name: "Aktuelle Stufe" }).fill("27");
 await page.getByRole("link", { name: "Levelroute" }).first().click();
 await page.getByRole("heading", { level: 1, name: /Levelroute/ }).waitFor();
-const level = await page.evaluate(() => JSON.parse(localStorage.getItem("wowf-companion:v1")).settings.level);
+const level = await page.evaluate(() => window.__active().settings.level);
 check(level === 27, "Fortschritt bleibt beim Seitenwechsel gespeichert");
 
 await page.getByRole("link", { name: "Dashboard" }).first().click();
@@ -52,7 +59,7 @@ await page.getByRole("heading", { level: 1, name: /Levelroute/ }).waitFor();
 check(page.url().includes("route.html"), "Globale Suche navigiert offline");
 
 await page.reload();
-const after = await page.evaluate(() => JSON.parse(localStorage.getItem("wowf-companion:v1")).settings.level);
+const after = await page.evaluate(() => window.__active().settings.level);
 check(after === 27, "Fortschritt übersteht Neuladen");
 
 await browser.close();

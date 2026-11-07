@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { STORAGE_KEY } from "@/lib/progress";
+import { APP_STORAGE_KEY, activeProfile, type AppData } from "@/lib/profiles";
 import { actions, useProgress } from "@/lib/store";
 import { StepItem } from "@/components/route/step-item";
 import { sectionById } from "@/data/route";
@@ -26,6 +26,14 @@ function StepProbe() {
   );
 }
 
+const STORAGE_KEY = APP_STORAGE_KEY;
+
+/** Gespeicherter Fortschritt des aktiven Charakters. */
+function savedState() {
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY)!) as AppData;
+  return activeProfile(data).state;
+}
+
 describe("Store & Persistenz", () => {
   beforeEach(() => {
     localStorage.clear();
@@ -41,10 +49,10 @@ describe("Store & Persistenz", () => {
       actions.toggleStep("a-wl-1");
     });
     expect(screen.getByTestId("level").textContent).toBe("23");
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY)!);
-    expect(saved.settings.level).toBe(23);
-    expect(saved.settings.classId).toBe("priest");
-    expect(saved.completedSteps["a-wl-1"]).toBeTypeOf("number");
+    const data = savedState();
+    expect(data.settings.level).toBe(23);
+    expect(data.settings.classId).toBe("priest");
+    expect(data.completedSteps["a-wl-1"]).toBeTypeOf("number");
   });
 
   it("Klassenwechsel löscht keinen Fortschritt", () => {
@@ -64,7 +72,7 @@ describe("Store & Persistenz", () => {
     expect(box.getAttribute("data-state")).toBe("unchecked");
     fireEvent.click(box);
     expect(screen.getByRole("checkbox").getAttribute("data-state")).toBe("checked");
-    expect(JSON.parse(localStorage.getItem(STORAGE_KEY)!).completedSteps["a-wf-1"]).toBeDefined();
+    expect(savedState().completedSteps["a-wf-1"]).toBeDefined();
   });
 
   it("begrenzt Hauptberufe auf zwei", () => {
@@ -73,8 +81,8 @@ describe("Store & Persistenz", () => {
       actions.addPrimaryProfession("mining");
       actions.addPrimaryProfession("skinning");
     });
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY)!);
-    expect(saved.professions.primary.map((p: { id: string }) => p.id)).toEqual(["herbalism", "mining"]);
+    const data = savedState();
+    expect(data.professions.primary.map((p: { id: string }) => p.id)).toEqual(["herbalism", "mining"]);
   });
 
   it("Klassenwechsel entfernt nur ein unpassendes Volk", () => {
@@ -82,9 +90,9 @@ describe("Store & Persistenz", () => {
       actions.setRace("nightelf");
       actions.setClass("priest");
     });
-    expect(JSON.parse(localStorage.getItem(STORAGE_KEY)!).settings.raceId).toBe("nightelf");
+    expect(savedState().settings.raceId).toBe("nightelf");
     act(() => actions.setClass("paladin"));
-    expect(JSON.parse(localStorage.getItem(STORAGE_KEY)!).settings.raceId).toBeNull();
+    expect(savedState().settings.raceId).toBeNull();
   });
 
   it("Fraktionswechsel entfernt unpassendes Volk", () => {
@@ -92,7 +100,7 @@ describe("Store & Persistenz", () => {
       actions.setRace("human");
       actions.setFaction("horde");
     });
-    expect(JSON.parse(localStorage.getItem(STORAGE_KEY)!).settings.raceId).toBeNull();
+    expect(savedState().settings.raceId).toBeNull();
   });
 });
 
@@ -107,7 +115,7 @@ describe("XP-Aktionen", () => {
       actions.setLevel(1);
       actions.addXp(1500); // 400 (1→2) + 900 (2→3) + 200
     });
-    const s = JSON.parse(localStorage.getItem(STORAGE_KEY)!);
+    const s = savedState();
     expect(s.settings.level).toBe(3);
     expect(s.settings.xp).toBe(200);
   });
@@ -118,13 +126,13 @@ describe("XP-Aktionen", () => {
       actions.setXp(20000);
       actions.setLevel(2);
     });
-    expect(JSON.parse(localStorage.getItem(STORAGE_KEY)!).settings.xp).toBe(899);
+    expect(savedState().settings.xp).toBe(899);
   });
 
   it("Sitzung startet und stoppt", () => {
     act(() => actions.startSession());
-    expect(JSON.parse(localStorage.getItem(STORAGE_KEY)!).session).not.toBeNull();
+    expect(savedState().session).not.toBeNull();
     act(() => actions.stopSession());
-    expect(JSON.parse(localStorage.getItem(STORAGE_KEY)!).session).toBeNull();
+    expect(savedState().session).toBeNull();
   });
 });

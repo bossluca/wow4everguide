@@ -16,7 +16,7 @@ Fortschritt mit lokaler Speicherung. Keine Anmeldung, keine Datenbank, kein Back
 | **Levelroute** | 21 Allianz- und 19 Horde-Abschnitte von 1–60 mit Stationen, Hubs, Questketten, optionalen Dungeons, Reisewegen, Trainern, Berufshinweisen, Warnungen, Wechselkriterien und Datenlücken. Filter: Fraktion, Klasse, Level, Gebiet, Volltextsuche, nur offene/wichtige, eigener Startzweig |
 | **Klassen** | Paladin, Priester, Druide, Hexenmeister; Vergleichstabelle über 9 Kriterien, begründete Empfehlung, pro Klasse: Solo-Spezialisierung, Talent-Meilensteine, Fähigkeiten mit Trainingsstufen, Kampfablauf, Ressourcen, schwierige Gegner, Ausrüstung, Alternative, Forever-Änderungen |
 | **Berufe & Gold** | Empfehlung pro Klasse, Vergleich von 6 Kombinationen nach 5 Zielen, eigene Berufe/Skills (2 Hauptberufe + Nebenberufe), Ressourcen pro Gebiet inkl. „Umweg lohnt?“, Ressourcen-Finder, Gold-/Materialplan je Levelabschnitt, Rezepte |
-| **Fortschritt** | Charakter (Stufe, Fraktion, Klasse, Volk, Gebiet), Fortschritt pro Gebiet, offene/erledigte Aufgaben, Notizen, JSON-Export/-Import, Zurücksetzen mit Bestätigungsdialog |
+| **Fortschritt** | Mehrere Charaktere (z. B. Mensch Paladin und Mensch Hexenmeister) mit getrenntem Fortschritt, Charakter (Stufe, Fraktion, Klasse, Volk, Gebiet), Fortschritt pro Gebiet, offene/erledigte Aufgaben, Notizen, JSON-Export (aktueller oder alle Charaktere) und -Import (fügt hinzu, überschreibt nichts), Zurücksetzen mit Bestätigungsdialog |
 | **Quellen & Lücken** | Verifikationslegende, gesicherte Forever-Fakten, Liste offener Datenlücken, Quellenübersicht (Titel, URL, Thema, Prüfdatum) |
 
 Außerdem: globale Suche (Strg/⌘ + K), Dark Mode als Standard (Light Mode umschaltbar), Sidebar am Desktop und
@@ -146,5 +146,5 @@ Das Layout muss für neue Inhalte nicht angepasst werden.
 
 ## Speicherformat
 
-Der Fortschritt liegt unter dem localStorage-Schlüssel `wowf-companion:v1` (Version 1). Export und Import nutzen dasselbe JSON;
+Alle Charaktere liegen unter dem localStorage-Schlüssel `wowf-companion:v2` (Version 2: Liste von Charakteren, jeder im Format von Version 1). Der Einzelcharakter der Vorgängerversion (`wowf-companion:v1`) wird beim ersten Start automatisch als „Charakter 1“ übernommen und bleibt als Backup erhalten. Export und Import nutzen dasselbe JSON (Version 1 und 2 werden gelesen);
 beim Import werden unbekannte Felder verworfen und ungültige Werte auf sichere Standards gesetzt.
