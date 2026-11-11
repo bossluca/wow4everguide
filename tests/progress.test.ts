@@ -4,7 +4,8 @@ import { createDefaultState, exportFileName, parseProgress, serializeProgress, c
 describe("parseProgress", () => {
   it("akzeptiert einen exportierten Zustand verlustfrei (Round-Trip)", () => {
     const s = createDefaultState();
-    s.settings = { faction: "horde", classId: "paladin", raceId: "undead", level: 27, currentZoneId: "hillsbrad" };
+    s.settings = { faction: "horde", classId: "paladin", raceId: "undead", level: 27, xp: 12000, currentZoneId: "hillsbrad" };
+    s.session = { startedAt: 1700000000000, startTotalXp: 400000 };
     s.completedSteps = { "h-hb-1": 1700000000000 };
     s.professions = { primary: [{ id: "herbalism", skill: 140 }, { id: "mining", skill: 120 }], secondary: { firstaid: 150 } };
     s.notes = "Test";
@@ -46,6 +47,19 @@ describe("parseProgress", () => {
     expect(s.professions.secondary).toEqual({ fishing: 300 });
     expect(s.notes).toBe("");
     expect(parsed.warnings.length).toBeGreaterThan(0);
+  });
+
+  it("begrenzt XP auf die aktuelle Stufe und verwirft kaputte Sitzungen", () => {
+    const parsed = parseProgress({ version: 1, settings: { level: 10, xp: 999999 }, session: { startedAt: "gestern" } });
+    expect(parsed.ok).toBe(true);
+    if (!parsed.ok) return;
+    expect(parsed.state.settings.xp).toBe(7599);
+    expect(parsed.state.session).toBeNull();
+  });
+
+  it("akzeptiert ältere Exporte ohne XP-Feld", () => {
+    const parsed = parseProgress({ version: 1, settings: { level: 12 } });
+    expect(parsed.ok && parsed.state.settings.xp).toBe(0);
   });
 
   it("begrenzt Stufen auf 1–60", () => {

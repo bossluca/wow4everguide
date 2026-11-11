@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { STATIC_EXPORT, hardNavigate } from "@/lib/href";
 import { Search } from "lucide-react";
 import { search } from "@/lib/search";
 import { Button } from "@/components/ui/button";
@@ -30,7 +31,8 @@ export function SearchDialog({ compact = false }: { compact?: boolean }) {
   function go(href: string) {
     setOpen(false);
     setQuery("");
-    router.push(href);
+    if (STATIC_EXPORT) hardNavigate(href);
+    else router.push(href);
   }
 
   return (

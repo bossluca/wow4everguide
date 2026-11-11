@@ -1,5 +1,5 @@
 import type { ClassCriterion, ClassGuide, ClassId } from "@/lib/types";
-import { v } from "./verify";
+import { dated, v } from "./verify";
 
 export const classCriteria: ClassCriterion[] = [
   { id: "comfort", label: "Komfort beim Solo-Questing" },
@@ -110,6 +110,7 @@ export const classGuides: ClassGuide[] = [
       { text: "Tigerfuror entfällt; Bärengestalt erhält mehr Wut durch kritische Treffer.", verification: v.beta(["lfcarry-class-changes"]) },
       { text: "Omen der Klarsicht ist kein Talent mehr (Grundfähigkeit ab 20).", verification: v.beta(["lfcarry-class-changes", "wfg-druid"]) },
       { text: "Skyborne können auf beiden Fraktionen Druide spielen.", verification: v.confirmed(["blizz-skyborne"]) },
+      { text: "Tauren: Ausdauer (Endurance) erhöht zusätzlich kritischen Schaden und kritische Heilung.", verification: v.beta(["iv-oct15", "blizz-devnotes"], undefined, "Beta 1.60.1.70425 (15. Okt. 2026)") },
     ],
     verification: v.beta(["iv-feral-leveling", "warcrafttavern-druid", "lfcarry-class-changes"], "Klassenbewertung ist eine Einschätzung auf Basis von Classic-Erfahrung und Beta-Berichten."),
   },
@@ -197,6 +198,7 @@ export const classGuides: ClassGuide[] = [
       { text: "Neues Siegel des Furors (Tank-Siegel mit Absorption, Richturteil verspottet).", verification: v.beta(["lfcarry-class-changes"]) },
       { text: "Holy Strike stärker, Abklingzeit im Heilig-Baum 10 s.", verification: v.beta(["lfcarry-class-changes"]) },
       { text: "Neues Vergeltungstalent Twist of Light.", verification: v.beta(["lfcarry-class-changes", "method-paladin"]) },
+      { text: "Völker: Waffenspezialisierungen von Mensch und Zwerg wurden durch Krit-Boni ersetzt – Waffenwahl ist nicht mehr an das Volk gebunden.", verification: v.beta(["iv-oct15", "blizz-devnotes"], "Details je Volk im Original prüfen.", "Beta 1.60.1.70425 (15. Okt. 2026)") },
     ],
     verification: v.beta(["iv-ret-paladin", "method-paladin", "zockify-paladin"], "Klassenbewertung ist eine Einschätzung."),
   },
@@ -253,19 +255,20 @@ export const classGuides: ClassGuide[] = [
       { name: "Gedankenschlag", level: 10, note: "Starker Opener.", verification: v.classic() },
       { name: "Psychischer Schrei", level: 14, note: "Notfall bei mehreren Gegnern.", verification: v.classic() },
       { name: "Gedankenschinden", level: 20, note: "Schatten-Talent, Hauptfüller.", verification: v.classic() },
-      { name: "Verschlingende Seuche", level: 20, note: "Laut Beta-Guides in Forever für alle Priester ab 20; Abklingzeit-Angaben widersprüchlich (1 min vs. 24 s).", foreverChange: true, verification: v.beta(["zockify-priest", "lfcarry-class-changes"], "Widersprüchliche Abklingzeit-Angaben.") },
+      { name: "Verschlingende Seuche", level: 20, note: "Laut Beta-Guides in Forever für alle Priester ab 20; Abklingzeit seit dem Beta-Update vom 15. Okt. 24 s (vorher 1 min) – fester Teil jeder Rotation.", foreverChange: true, verification: v.beta(["lfcarry-patch-notes", "blizz-devnotes", "zockify-priest"], "Abklingzeit laut Patchnotes-Zusammenfassungen zum 15. Okt.", "Beta 1.60.1.70425 (15. Okt. 2026)") },
       { name: "Schattengestalt", level: 40, note: "Mehr Schattenschaden, weniger erlittener Schaden.", verification: v.classic() },
       { name: "Penance", note: "Disziplin-Fähigkeit in Forever; Freischaltung uneinheitlich (Stufe 35 oder 21 Punkte).", foreverChange: true, verification: v.beta(["zockify-priest", "lfcarry-class-changes"]) },
     ],
     rotation: [
       "Machtwort: Schild → Schattenwort: Schmerz → Gedankenschlag.",
-      "Verschlingende Seuche bei längeren Kämpfen.",
+      "Verschlingende Seuche auf Abklingzeit (24 s seit 15. Okt.).",
       "Bis 20: Rest mit Zauberstab; ab 20 Gedankenschinden.",
       "Gegner mit wenig Leben per Zauberstab beenden, um Mana zu sparen.",
     ],
     resourceTips: [
       "Willensentzug-Proc nach Kills ausnutzen und direkt weiterziehen.",
       "Zauberstab-Upgrades (Verzauberkunst oder AH) haben hohe Priorität.",
+      "Zauberstab feuert seit dem 15. Okt. erst nach 0,5 s Stillstand – nicht im Laufen schießen wollen.",
       "Trinken nur, wenn Mana unter ca. 30 % ist.",
     ],
     hardEnemyTips: [
@@ -282,9 +285,100 @@ export const classGuides: ClassGuide[] = [
       { text: "Disziplin erhält Penance und Divine Aegis.", verification: v.beta(["lfcarry-class-changes"]) },
       { text: "Heilig endet in Gebet der Besserung (Prayer of Mending).", verification: v.beta(["lfcarry-class-changes"]) },
       { text: "Gnome können Priester spielen.", verification: v.confirmed(["iv-race-guide"]) },
-      { text: "Verschlingende Seuche für alle Priester; Abklingzeit-Angaben widersprüchlich.", verification: v.beta(["lfcarry-class-changes", "zockify-priest"]) },
+      { text: "Verschlingende Seuche für alle Priester; Abklingzeit 24 s statt 1 min (15. Okt.).", verification: v.beta(["lfcarry-patch-notes", "blizz-devnotes"], undefined, "Beta 1.60.1.70425 (15. Okt. 2026)") },
+      { text: "Zauberstäbe (und Automatischer Schuss) brauchen 0,5 s Stillstand vor dem Schuss.", verification: v.beta(["iv-oct15", "blizz-devnotes"], undefined, "Beta 1.60.1.70425 (15. Okt. 2026)") },
     ],
     verification: v.beta(["mobalytics-priest", "zockify-priest", "wfg-priest"], "Klassenbewertung ist eine Einschätzung."),
+  },
+  {
+    id: "warlock",
+    name: "Hexenmeister",
+    summary:
+      "Pet tankt, Schaden-über-Zeit-Zauber töten: sehr angenehmes Solo-Leveling mit viel Kontrolle (Furcht, Flüche) und eingebauter Selbstversorgung über Lebensentzug. Preis: Stoffrüstung, Seelensplitter-Verwaltung und etwas mehr Mikromanagement. Forever baut Talente und Pets deutlich um – 17 Talente sind komplett neu.",
+    roles: ["Fernkampf (Schatten/Feuer)", "Pet-Klasse", "Utility (Beschwörung, Gesundheitssteine)"],
+    ratings: [
+      { criterionId: "comfort", rating: "gut", text: "Pet nimmt den Schaden, Furcht und Flüche kontrollieren Kämpfe. Anfangs aber kaum Schutz, wenn das Pet fehlt." },
+      { criterionId: "selfheal", rating: "gut", text: "Lebensentzug, Gesundheitsstein und Pet-Heilung (Demonic Energies) – kein echter Heilzauber." },
+      { criterionId: "downtime", rating: "mittel", text: "Aderlass tauscht Leben gegen Mana; danach heilen oder trinken. Seelensplitter und Taschenplatz kosten Aufmerksamkeit." },
+      { criterionId: "speed", rating: "gut", text: "DoTs plus Pet töten ohne Pausen, sobald Verderbnis sofort wirkt (Improved Corruption 5/5)." },
+      { criterionId: "gear", rating: "gut", text: "Zauberstab und Zaubermacht helfen, doch DoTs und Pet tragen den Schaden – wenig Waffenabhängigkeit." },
+      { criterionId: "multi", rating: "mittel", text: "DoTs auf mehrere Ziele und Pet-Tank gehen, Furcht kann aber weitere Gegner anziehen." },
+      { criterionId: "elites", rating: "gut", text: "Leerwandler tankt, Furcht und Flüche kontrollieren. Kiten über Furcht und DoTs ist verbreitet." },
+      { criterionId: "complexity", rating: "mittel", text: "Pet-Wahl, Flüche, DoT-Pflege und Splitter erfordern etwas Übung – dafür viele Möglichkeiten." },
+      { criterionId: "endgame", rating: "gut", text: "Beschwörung, Gesundheitssteine und Schaden sind in Dungeons/Raids gefragt; Pets skalieren in Forever mit deinen Werten." },
+    ],
+    soloSpec: {
+      name: "Gebrechen (Affliction) – DoT-Pet-Stil",
+      why: "Method empfiehlt Gebrechen zum Leveln, alle drei Bäume gelten als spielbar. Die Quellen widersprechen sich bei der Talentreihenfolge: Dämonologie wird am häufigsten gewählt, Gebrechen und Zerstörung folgen.",
+    },
+    talentMilestones: [
+      {
+        levels: "10–14",
+        focus: "Verderbnis sofort wirksam machen",
+        details: ["Improved Corruption 5/5 – laut Conquest Capped Verderbnis ohne Zauberzeit und 10 % stärker."],
+        verification: dated(v.beta(["cc-warlock"], "Reihenfolge je Guide verschieden (Warcraft Tavern startet mit Improved Drains/Amplify Curse).", "Drittquellen, Stand Nov. 2026")),
+      },
+      {
+        levels: "15–30",
+        focus: "Improved Drains, Pandemic",
+        details: ["Improved Drains (neu in Forever) und Pandemic (neu in Forever) verlängern bzw. verstärken DoTs und Entzugszauber.", "Konkrete Effekte der neuen Talente im Forever-Talentrechner prüfen."],
+        verification: dated(v.beta(["wt-warlock", "cc-warlock", "foreverchanges-warlock"], "Talentnamen aus mehreren Guides; Wirkung nicht einzeln geprüft.", "Drittquellen, Stand Nov. 2026")),
+      },
+      {
+        levels: "30–40",
+        focus: "Malevolence und Fortsetzung Gebrechen",
+        details: ["Malevolence (neu in Forever) laut Warcraft Tavern nach Pandemic.", "Zockify (aktualisiert 4. Nov.) wechselt ab 40 in Dämonologie – Alternative, wenn das Pet stärker im Mittelpunkt stehen soll."],
+        verification: dated(v.provisional(["wt-warlock", "zockify-warlock"], "Guides widersprechen sich bei der Reihenfolge ab Stufe 30.")),
+      },
+      {
+        levels: "40–60",
+        focus: "Gebrechen abschließen oder Dämonologie",
+        details: ["Wrack (neu) laut Zockify erst spät; Rest nach Forever-Talentrechner.", "Prüfe vor dem Respec (Kosten), ob dein Pet-Stil Dämonologie braucht."],
+        verification: dated(v.provisional(["zockify-warlock", "method-warlock"])),
+      },
+    ],
+    abilities: [
+      { name: "Schattenblitz / Feuerbrand", level: 1, note: "Grundzauber; Schattenblitz als Füller.", verification: v.classic() },
+      { name: "Wichtel beschwören", level: 1, note: "Erstes Pet, wirft Feuerbälle.", verification: v.classic() },
+      { name: "Verderbnis", level: 4, note: "Erster DoT. Mit Improved Corruption sofort wirksam.", verification: v.classic() },
+      { name: "Aderlass", level: 6, note: "Leben gegen Mana – nur mit genug Leben.", verification: v.classic() },
+      { name: "Fluch der Pein / Furcht", level: 8, note: "Zweiter DoT bzw. Kontrolle.", verification: v.classic() },
+      { name: "Leerwandler beschwören", level: 10, note: "Tank-Pet; Klassenquest beim Trainer (Classic).", verification: v.classic() },
+      { name: "Lebensentzug", level: 14, note: "Heilt dich – Hauptheilung beim Questen.", verification: v.classic() },
+      { name: "Sukkubus beschwören", level: 20, note: "Schaden-Pet mit Betörung; Klassenquest (Classic).", verification: v.classic() },
+      { name: "Teufelsjäger beschwören", level: 30, note: "Unterbricht Zauber, entfernt Magie; Klassenquest (Classic). In Forever mit Improved Felhunter-Talent.", verification: v.classic() },
+      { name: "Teufelsross beschwören", level: 40, note: "Klassenquest für das Reittier (Classic).", verification: v.classic() },
+      { name: "Pet-Skalierung", note: "Pets skalieren in Forever mit Werten des Beschwörers; Lebenspunkte pro Ausdauer von 7,5 auf 2 gesenkt (3. Nov.).", foreverChange: true, verification: dated(v.beta(["foreverchanges-warlock", "classicwowforever-warlock"], "Stand Nov. 2026, Drittquellen.", "Drittquellen, Stand 3. Nov. 2026")) },
+    ],
+    rotation: [
+      "Pet rufen, Pet angreifen lassen.",
+      "Verderbnis → Fluch der Pein → Schattenblitz als Füller.",
+      "Bei niedrigem Leben des Ziels: Zauberstab statt Zauber.",
+      "Notfall: Furcht, Pet aufziehen, Lebensentzug.",
+    ],
+    resourceTips: [
+      "Aderlass nur bei hohem Leben; danach Lebensentzug oder Essen.",
+      "Seelensplitter beim Töten per Seelensaugen sammeln; Taschenplatz einplanen.",
+      "Gesundheitsstein vor schwierigen Kämpfen erschaffen und aufheben.",
+    ],
+    hardEnemyTips: [
+      "Leerwandler tanken lassen, DoTs setzen, mit Furcht Adds von dir weghalten.",
+      "Furcht nur wenn Fluchtweg frei ist – sonst zieht der Gegner weitere Gruppen an.",
+      "Elites: aus der Entfernung DoTs, Pet aufziehen; bei knappem Leben Gesundheitsstein.",
+    ],
+    gearPriorities: ["Zaubermacht (Schattenschaden)", "Ausdauer (Aderlass braucht Leben)", "Zauberstab für Restleben"],
+    alternative: {
+      name: "Dämonologie (Pet-Fokus)",
+      when: "Wenn du das Pet als Hauptschadenquelle willst: Forever skaliert Pets mit deinen Werten und verbessert Unholy Power für alle Pets.",
+    },
+    foreverChanges: [
+      { text: "17 Talente sind neu, darunter Improved Drains, Pandemic, Malevolence, Wrack, Demonic Aegis, Demonic Energies, Incinerate.", verification: dated(v.beta(["foreverchanges-warlock", "classicwowforever-warlock"], undefined, "Drittquellen, Stand Nov. 2026")) },
+      { text: "Pets skalieren von den Werten des Beschwörers; Pet-Leben pro Ausdauer von 7,5 auf 2 gesenkt (3. Nov.).", verification: dated(v.beta(["foreverchanges-warlock"], undefined, "Drittquellen, Stand 3. Nov. 2026")) },
+      { text: "Unholy Power erhöht jetzt den gesamten Schaden aller Pets (5 Ränge), nicht nur Nahkampfschaden einzelner Pets.", verification: dated(v.beta(["foreverchanges-warlock"], undefined, "Drittquellen, Stand Nov. 2026")) },
+      { text: "Demonic Energies heilt das Pet für einen Teil deines Zauberschadens (8 % oder 15 % – Quellen widersprechen sich).", verification: dated(v.provisional(["foreverchanges-warlock", "classicwowforever-warlock"], "Zahl unklar."))},
+      { text: "Troll kann Hexenmeister spielen (neue Kombination).", verification: dated(v.provisional(["iv-race-guide", "mobalytics-warlock"], "Quellen führen Troll nicht einheitlich auf."))},
+    ],
+    verification: dated(v.provisional(["method-warlock", "wt-warlock", "cc-warlock", "foreverchanges-warlock"], "Klassenbewertung ist eine Einschätzung auf Basis von Classic-Erfahrung und Drittquellen; Talente im Forever-Talentrechner prüfen.")),
   },
 ];
 
@@ -304,6 +398,7 @@ export const classRecommendation = {
     "Der Druide ist in Forever am stärksten umgebaut; Talente können sich bis zum Release noch ändern.",
     "Wer eine möglichst simple Rotation und maximale Sicherheit will, ist mit dem Paladin glücklicher – dafür langsamer und waffenabhängig.",
     "Wer auf 60 vor allem heilen will, wählt Priester und levelt als Schatten.",
+    "Hexenmeister: Pet tankt, DoTs töten – sehr angenehm solo, kostet aber Seelensplitter und etwas Mikromanagement (Stoffrüstung, Aderlass).",
   ],
   verification: v.provisional(
     ["iv-feral-leveling", "iv-ret-paladin", "mobalytics-priest", "lfcarry-class-changes"],

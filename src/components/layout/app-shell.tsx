@@ -1,19 +1,23 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/shared/site-link";
 import { usePathname } from "next/navigation";
+import { normalizePath } from "@/lib/href";
 import { useState, type ReactNode } from "react";
 import { Compass, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { navItems } from "./nav-items";
+import { DATA_UPDATED_AT } from "@/data/verify";
 import { ThemeToggle } from "./theme-toggle";
 import { PlayerStatus } from "./player-status";
 import { SearchDialog } from "./search-dialog";
 
+const formatDate = (iso: string) => iso.split("-").reverse().join(".");
+
 function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
-  const pathname = usePathname();
+  const pathname = normalizePath(usePathname());
   return (
     <nav className="flex flex-col gap-0.5" aria-label="Hauptnavigation">
       {navItems.map(({ href, label, icon: Icon }) => {
@@ -65,7 +69,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="mt-auto space-y-2">
           <PlayerStatus />
           <div className="flex items-center justify-between px-1 text-xs text-muted-foreground">
-            <span>Daten: Stand 19.10.2026</span>
+            <span>Daten: Stand {formatDate(DATA_UPDATED_AT)}</span>
             <ThemeToggle />
           </div>
         </div>

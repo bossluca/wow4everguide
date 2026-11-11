@@ -2,8 +2,8 @@
 
 import { useRef, useState } from "react";
 import { Download, RotateCcw, Upload } from "lucide-react";
-import { actions, useProgress } from "@/lib/store";
-import { exportFileName, parseProgress, serializeProgress } from "@/lib/progress";
+import { actions, useProfiles, useProgress } from "@/lib/store";
+import { activeProfile, parseProfiles, profileExportFileName, serializeProfiles } from "@/lib/profiles";
 import { routeTotals, sectionProgress, sectionsForPlayer, zoneProgressList, stepsForClass } from "@/lib/derive";
 import { zoneById } from "@/data/zones";
 import {
@@ -29,36 +29,40 @@ import { PageHeader } from "@/components/shared/page-header";
 import { CharacterForm } from "@/components/shared/character-form";
 import { ClientOnly } from "@/components/shared/client-only";
 import { StepItem } from "@/components/route/step-item";
+import { ProfilesCard } from "./profiles-card";
 
 type Message = { kind: "success" | "error"; text: string } | null;
 
 function DataTools() {
-  const state = useProgress();
+  const app = useProfiles();
+  const profile = activeProfile(app);
   const fileRef = useRef<HTMLInputElement>(null);
   const [message, setMessage] = useState<Message>(null);
 
-  function exportJson() {
-    const blob = new Blob([serializeProgress(state)], { type: "application/json" });
+  function download(content: string, fileName: string) {
+    const blob = new Blob([content], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = exportFileName();
+    a.download = fileName;
     a.click();
     URL.revokeObjectURL(url);
-    setMessage({ kind: "success", text: "Export erstellt." });
+    setMessage({ kind: "success", text: `Export erstellt: ${fileName}` });
   }
 
   async function importJson(file: File) {
     try {
-      const parsed = parseProgress(JSON.parse(await file.text()));
+      const parsed = parseProfiles(JSON.parse(await file.text()));
       if (!parsed.ok) {
         setMessage({ kind: "error", text: parsed.error });
         return;
       }
-      actions.importState(parsed.state);
+      const added = actions.importProfiles(parsed.profiles);
       setMessage({
-        kind: "success",
-        text: `Import erfolgreich: ${Object.keys(parsed.state.completedSteps).length} erledigte Stationen übernommen.${parsed.warnings.length ? ` Hinweise: ${parsed.warnings.join(" ")}` : ""}`,
+        kind: added ? "success" : "error",
+        text: added
+          ? `Import erfolgreich: ${added} Charakter${added === 1 ? "" : "e"} hinzugefügt, vorhandene bleiben unverändert.${parsed.warnings.length ? ` Hinweise: ${parsed.warnings.join(" ")}` : ""}`
+          : "Import nicht möglich: Maximale Zahl an Charakteren erreicht.",
       });
     } catch {
       setMessage({ kind: "error", text: "Die Datei ist kein gültiges JSON." });
@@ -72,14 +76,19 @@ function DataTools() {
       <CardHeader>
         <CardTitle className="text-base">Daten sichern</CardTitle>
         <CardDescription>
-          Alles liegt nur in diesem Browser (localStorage) und übersteht Neustarts. Für Gerätewechsel oder Backups als JSON exportieren.
+          Alles liegt nur in diesem Browser (localStorage) und übersteht Neustarts. Für Gerätewechsel, Backups oder zum Weitergeben an den Kollegen als JSON exportieren. Ein Import fügt Charaktere hinzu und überschreibt nichts.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="flex flex-wrap gap-2">
-          <Button variant="outline" onClick={exportJson}>
-            <Download /> Export (JSON)
+          <Button variant="outline" onClick={() => download(serializeProfiles([profile], profile.id), profileExportFileName(profile.name))}>
+            <Download /> Export: {profile.name}
           </Button>
+          {app.profiles.length > 1 && (
+            <Button variant="outline" onClick={() => download(serializeProfiles(app.profiles, app.activeId), profileExportFileName(null))}>
+              <Download /> Export: alle Charaktere
+            </Button>
+          )}
           <Button variant="outline" onClick={() => fileRef.current?.click()}>
             <Upload /> Import (JSON)
           </Button>
@@ -102,9 +111,9 @@ function DataTools() {
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Gesamten Fortschritt löschen?</AlertDialogTitle>
+                <AlertDialogTitle>Fortschritt von „{profile.name}“ löschen?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Stufe, erledigte Stationen, Berufe und Notizen werden unwiderruflich gelöscht. Tipp: Vorher exportieren.
+                  Stufe, erledigte Stationen, Berufe und Notizen dieses Charakters werden unwiderruflich gelöscht. Andere Charaktere bleiben erhalten. Tipp: Vorher exportieren.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -128,7 +137,7 @@ function DataTools() {
           </Alert>
         )}
         <p className="text-xs text-muted-foreground">
-          Zuletzt gespeichert: {state.updatedAt.startsWith("1970") ? "noch nie" : new Date(state.updatedAt).toLocaleString("de-DE")}
+          Zuletzt gespeichert: {profile.state.updatedAt.startsWith("1970") ? "noch nie" : new Date(profile.state.updatedAt).toLocaleString("de-DE")}
         </p>
       </CardContent>
     </Card>
@@ -186,6 +195,7 @@ function TaskOverview() {
 }
 
 function ProgressContent() {
+  const app = useProfiles();
   const state = useProgress();
   const totals = routeTotals(state);
   const zonesProgress = zoneProgressList(state);
@@ -195,9 +205,11 @@ function ProgressContent() {
     <>
       <PageHeader title="Fortschritt & Einstellungen" description="Charakter, Notizen, Fortschritt pro Gebiet sowie Export, Import und Zurücksetzen." />
 
+      <ProfilesCard />
+
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Charakter</CardTitle>
+          <CardTitle className="text-base">Einstellungen von {activeProfile(app).name}</CardTitle>
           <CardDescription>Klasse und Fraktion sind jederzeit wechselbar – erledigte Stationen bleiben gespeichert.</CardDescription>
         </CardHeader>
         <CardContent>

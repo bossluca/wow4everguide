@@ -12,6 +12,9 @@ import {
 } from "@/lib/derive";
 import { skinningSkillForLevel } from "@/data/resources";
 import { search } from "@/lib/search";
+import { hintsFor } from "@/data/hints";
+import { raceById } from "@/data/races";
+import { classById, classCriteria } from "@/data/classes";
 
 function state(patch: Partial<ReturnType<typeof createDefaultState>["settings"]> = {}) {
   const s = createDefaultState();
@@ -115,5 +118,37 @@ describe("Suche", () => {
     expect(search("druide").some((r) => r.kind === "Klasse")).toBe(true);
     expect(search("dammerwald").some((r) => r.title === "Dämmerwald")).toBe(true);
     expect(search("")).toEqual([]);
+  });
+});
+
+describe("Mensch Paladin und Mensch Hexenmeister", () => {
+  const human = (classId: "paladin" | "warlock", level: number) => state({ raceId: "human", classId, level });
+
+  it("starten beide in Elwynn und folgen derselben Route", () => {
+    expect(currentSection(human("paladin", 1))?.id).toBe("a-elwynn");
+    expect(currentSection(human("warlock", 1))?.id).toBe("a-elwynn");
+    expect(currentSection(human("warlock", 12))?.id).toBe("a-westfall");
+  });
+
+  it("sehen nur ihre eigenen Klassenschritte", () => {
+    const ids = (c: "paladin" | "warlock") => nextTasks(human(c, 12), 50).map((t) => t.step.id);
+    expect(ids("warlock")).toContain("a-wf-c2");
+    expect(ids("warlock")).not.toContain("a-wf-c1");
+    expect(ids("paladin")).toContain("a-wf-c1");
+    expect(ids("paladin")).not.toContain("a-wf-c2");
+  });
+
+  it("zeigen Völker- und Klassenhinweise passend an", () => {
+    const texts = (c: "paladin" | "warlock", race: "human" | null) => hintsFor(12, c, race).map((h) => h.text).join(" | ");
+    expect(texts("warlock", "human")).toContain("Leerwandler");
+    expect(texts("warlock", "human")).toContain("Schwert-Spezialisierung");
+    expect(texts("paladin", "human")).toContain("Tome of Divinity");
+    expect(texts("paladin", null)).not.toContain("Schwert-Spezialisierung");
+  });
+
+  it("Mensch kann beide Klassen wählen, Zwerg keinen Hexenmeister", () => {
+    expect(raceById.get("human")?.classes).toEqual(expect.arrayContaining(["paladin", "warlock"]));
+    expect(raceById.get("dwarf")?.classes).not.toContain("warlock");
+    expect(classById.get("warlock")?.ratings).toHaveLength(classCriteria.length);
   });
 });

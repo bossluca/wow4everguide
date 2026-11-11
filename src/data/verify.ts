@@ -2,6 +2,14 @@ import type { Verification } from "@/lib/types";
 
 /** Stand der Recherche. Bei Aktualisierungen hier und in den Datensätzen anpassen. */
 export const DATA_CHECKED_AT = "2026-10-19";
+/** Datum der letzten Aktualisierungsrunde (neu geprüfte Einträge tragen dieses Datum). */
+export const DATA_UPDATED_AT = "2026-11-05";
+
+/** Setzt ein neueres Prüfdatum, z. B. dated(v.beta([...])). */
+export function dated(verification: Verification, date: string = DATA_UPDATED_AT): Verification {
+  return { ...verification, checkedAt: date };
+}
+
 export const BETA_BUILD = "Beta 1.60.1.70425–70450 (Okt. 2026)";
 
 export const v = {

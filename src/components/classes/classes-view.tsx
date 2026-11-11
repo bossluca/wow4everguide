@@ -180,15 +180,15 @@ function ClassesContent() {
   const state = useProgress();
   const params = useSearchParams();
   const tabParam = params.get("tab");
-  const initial: ClassId = tabParam === "paladin" || tabParam === "priest" || tabParam === "druid" ? tabParam : state.settings.classId;
-  const order: ClassId[] = ["druid", "paladin", "priest"];
+  const order: ClassId[] = ["druid", "paladin", "priest", "warlock"];
+  const initial: ClassId = order.find((id) => id === tabParam) ?? state.settings.classId;
   const ordered = [...classGuides].sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
 
   return (
     <>
       <PageHeader
         title="Klassenwahl & Leveling-Builds"
-        description="Paladin, Priester und Druide im Vergleich für entspanntes Solo-Questing. Bewertungen sind begründete Einschätzungen, keine Messwerte."
+        description="Paladin, Priester, Druide und Hexenmeister im Vergleich für entspanntes Solo-Questing. Bewertungen sind begründete Einschätzungen, keine Messwerte."
       />
 
       <Card className="border-success/40">

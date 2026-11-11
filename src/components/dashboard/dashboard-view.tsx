@@ -1,17 +1,17 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/shared/site-link";
 import { ArrowRight, CheckCheck, Compass, Hammer, Lightbulb, MapPin, Route as RouteIcon } from "lucide-react";
 import { actions, useProgress } from "@/lib/store";
 import {
   currentSection,
-  levelPercent,
   nextSection,
   nextTasks,
   resourcesForZone,
   routeTotals,
   sectionProgress,
   skinningRangeForZone,
+  xpProgress,
 } from "@/lib/derive";
 import { classById } from "@/data/classes";
 import { zoneById } from "@/data/zones";
@@ -32,6 +32,7 @@ import { CharacterForm, LevelStepper } from "@/components/shared/character-form"
 import { StepItem } from "@/components/route/step-item";
 import { ResourceList } from "@/components/professions/resource-list";
 import { ClientOnly } from "@/components/shared/client-only";
+import { XpTracker } from "./xp-tracker";
 
 function DashboardContent() {
   const state = useProgress();
@@ -44,11 +45,12 @@ function DashboardContent() {
   const curZone = cur ? zoneById.get(cur.zoneId) : undefined;
   const nextZone = next ? zoneById.get(next.zoneId) : undefined;
   const curProgress = cur ? sectionProgress(cur, state.completedSteps, classId) : undefined;
-  const hints = hintsFor(level, classId);
+  const hints = hintsFor(level, classId, raceId);
   const isFresh = state.updatedAt.startsWith("1970");
   const rec = professionRecommendation[classId];
   const recCombo = professionCombos.find((c) => c.id === rec.comboId);
   const firstTask = tasks[0];
+  const xp = xpProgress(level, state.settings.xp);
 
   return (
     <>
@@ -90,8 +92,8 @@ function DashboardContent() {
             </CardAction>
           </CardHeader>
           <CardContent className="space-y-1">
-            <Progress value={levelPercent(level)} aria-label="Fortschritt bis 60" />
-            <p className="text-xs text-muted-foreground">{levelPercent(level)} % bis Stufe 60</p>
+            <Progress value={xp.percentTo60} aria-label="XP-Fortschritt bis 60" />
+            <p className="text-xs text-muted-foreground">{xp.percentTo60.toLocaleString("de-DE")} % der XP bis Stufe 60</p>
           </CardContent>
         </Card>
         <Card>
@@ -228,6 +230,8 @@ function DashboardContent() {
           </CardContent>
         </Card>
       </div>
+
+      <XpTracker />
 
       <div className="grid gap-4 lg:grid-cols-2">
         <Card>

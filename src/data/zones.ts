@@ -82,8 +82,9 @@ export const zones: Zone[] = [
     notes: [
       "Forever: über 25 neue Quests und neue Levelpfade (BlizzCon 2026).",
       "Neuer Dungeon „Excavation Site: Wetlands“ oberhalb von Whelgars Ausgrabungsstätte.",
+      "Neue Fähr-Schleife Menethil ↔ Süderstade ↔ Auberdine.",
     ],
-    verification: v.confirmed(["outputlag-wetlands", "iv-dungeons-news"], "Neue Quests bestätigt; Questnamen und Hubs noch nicht öffentlich dokumentiert."),
+    verification: v.confirmed(["outputlag-wetlands", "iv-dungeons-news", "gamesgg-wetlands"], "Neue Quests bestätigt; Questnamen noch nicht öffentlich. Fähr-Schleife laut Beta-Guide."),
   }),
   zone("hillsbrad", "Vorgebirge des Hügellands", "eastern-kingdoms", [20, 30], "contested", ["bruiseweed", "wild-steelbloom", "kingsblood", "tin", "silver", "iron", "gold"], { alliance: ["Süderstade"], horde: ["Tarrens Mühle"] }, {
     foreverStatus: "changed",
@@ -110,16 +111,20 @@ export const zones: Zone[] = [
     notes: ["Forever: Dungeon „The Drowned City“ (35–40) vor der Küste."],
     verification: v.provisional(["iv-dungeons-news", "wiki-map-comparison"], "Als verändert markiert; Quest-Änderungen nicht im Detail dokumentiert."),
   }),
-  zone("dustwallow", "Düstermarschen", "kalimdor", [35, 45], "contested", ["kingsblood", "liferoot", "fadeleaf", "goldthorn", "iron", "gold", "mithril"], { alliance: ["Theramore"], horde: ["Brackenwall"] }),
-  zone("riverglades", "The Riverglades", "eastern-kingdoms", [35, 45], "contested", [], {}, {
+  zone("dustwallow", "Düstermarschen", "kalimdor", [35, 45], "contested", ["kingsblood", "liferoot", "fadeleaf", "goldthorn", "iron", "gold", "mithril"], { alliance: ["Theramore"], horde: ["Brackenwall"] }, {
+    notes: ["Forever: neuer Dungeon Alcaz Prison (48–53) auf der Insel Alcaz."],
+  }),
+  zone("riverglades", "The Riverglades", "eastern-kingdoms", [36, 44], "contested", [], { alliance: ["Farholde Keep"], horde: ["Rog'mar"] }, {
     foreverStatus: "new",
     skinnable: null,
     notes: [
       "Neue Zone (Größe ähnlich Schlingendorntal) zwischen Rotkammgebirge, Brennender Steppe, Ödland und Sümpfen des Elends.",
-      "Anreise per neuer Schiffsroute: Steamwheedle Port (Tanaris) → Powderfuse Port, oder über eine neue Abzweigung der Straße Rotkamm → Brennende Steppe.",
-      "Laut Blizzard über 150 Quests (später „fast 200“ genannt).",
+      "Hubs: Farholde Keep (Allianz), Rog'mar (Horde) und die Goblinstadt Powderfuse Port.",
+      "Flugrouten laut Guide: Farholde Keep ↔ Seenhain, Thelsamar, Morgans Wacht; Rog'mar ↔ Steinard, Hammerfall, Kargath, Flammenkamm.",
+      "Anreise per neuer Schiffsroute Steamwheedle Port (Tanaris) → Powderfuse Port oder über eine Abzweigung der Straße Rotkamm → Brennende Steppe.",
+      "Laut Blizzard über 150 Quests (später „fast 200“ genannt). Neuer Dungeon Krol'dok Stronghold (40–45).",
     ],
-    verification: v.confirmed(["wiki-forever", "wowhead-forever-map"], "Levelbereich „Mitte 30 bis Mitte 40“ laut Blizzard; Ressourcen und Flugpunkte unbekannt."),
+    verification: v.beta(["wiki-forever", "wfg-riverglades", "realmfirst-riverglades"], "Beta-Bereich 36–44 (Blizzard: Mitte 30 bis Mitte 40). Ob Powderfuse Port einen Flugpunkt hat, ist widersprüchlich. Ressourcen unbekannt."),
   }),
   zone("badlands", "Ödland", "eastern-kingdoms", [35, 45], "contested", ["kingsblood", "fadeleaf", "goldthorn", "firebloom", "purple-lotus", "iron", "gold", "mithril", "truesilver"], { horde: ["Kargath"] }),
   zone("swamp-of-sorrows", "Sümpfe des Elends", "eastern-kingdoms", [35, 45], "contested", ["liferoot", "fadeleaf", "goldthorn", "blindweed", "iron", "gold", "mithril"], { horde: ["Steinard"] }),
@@ -137,8 +142,12 @@ export const zones: Zone[] = [
   zone("hinterlands", "Hinterland", "eastern-kingdoms", [40, 50], "contested", ["goldthorn", "khadgars-whisker", "purple-lotus", "sungrass", "mithril", "truesilver", "small-thorium"], { alliance: ["Nistgipfel"], horde: ["Revantusk"] }),
   zone("searing-gorge", "Sengende Schlucht", "eastern-kingdoms", [43, 50], "contested", ["firebloom", "mithril", "truesilver", "small-thorium"], { alliance: ["Thoriumspitze"], horde: ["Thoriumspitze"] }),
   // 50–60
-  zone("azshara", "Azshara", "kalimdor", [45, 55], "contested", ["sungrass", "golden-sansam", "small-thorium", "rich-thorium"], { alliance: ["Talrendisspitze"], horde: ["Valormok"] }),
-  zone("ungoro", "Krater von Un'Goro", "kalimdor", [48, 55], "contested", ["sungrass", "golden-sansam", "dreamfoil", "small-thorium", "rich-thorium"], { alliance: ["Marschalls Zuflucht"], horde: ["Marschalls Zuflucht"] }),
+  zone("azshara", "Azshara", "kalimdor", [45, 55], "contested", ["sungrass", "golden-sansam", "small-thorium", "rich-thorium"], { alliance: ["Talrendisspitze"], horde: ["Valormok"] }, {
+    notes: ["Forever: neuer Dungeon Blackmaw Hold (55–60) im Norden."],
+  }),
+  zone("ungoro", "Krater von Un'Goro", "kalimdor", [48, 55], "contested", ["sungrass", "golden-sansam", "dreamfoil", "small-thorium", "rich-thorium"], { alliance: ["Marschalls Zuflucht"], horde: ["Marschalls Zuflucht"] }, {
+    notes: ["Forever: neuer Dungeon Shaper's Terrace (58–60)."],
+  }),
   zone("felwood", "Teufelswald", "kalimdor", [48, 55], "contested", ["sungrass", "gromsblood", "golden-sansam", "dreamfoil", "plaguebloom", "small-thorium"], { alliance: ["Talonzweig"], horde: ["Blutgiftposten"] }),
   zone("burning-steppes", "Brennende Steppe", "eastern-kingdoms", [50, 58], "contested", ["sungrass", "golden-sansam", "dreamfoil", "mountain-silversage", "small-thorium", "rich-thorium"], { alliance: ["Morgans Wacht"], horde: ["Flammenkamm"] }),
   zone("western-plaguelands", "Westliche Pestländer", "eastern-kingdoms", [51, 58], "contested", ["sungrass", "golden-sansam", "dreamfoil", "plaguebloom", "small-thorium"], { alliance: ["Kühlwindlager"] }),

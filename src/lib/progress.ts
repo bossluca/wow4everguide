@@ -2,8 +2,8 @@ import type { ClassId, Faction, ProfessionId, RaceId } from "./types";
 import { zoneById } from "@/data/zones";
 import { raceById } from "@/data/races";
 import { MAX_SKILL, PRIMARY_PROFESSION_LIMIT, professionById } from "@/data/professions";
+import { xpForLevel } from "@/data/xp";
 
-export const STORAGE_KEY = "wowf-companion:v1";
 export const SCHEMA_VERSION = 1;
 
 export type SecondaryProfessionId = "cooking" | "fishing" | "firstaid";
@@ -20,8 +20,12 @@ export interface ProgressState {
     classId: ClassId;
     raceId: RaceId | null;
     level: number;
+    /** XP innerhalb der aktuellen Stufe */
+    xp: number;
     currentZoneId: string | null;
   };
+  /** Laufende Spielsitzung für XP/Stunde (null = keine) */
+  session: { startedAt: number; startTotalXp: number } | null;
   /** Stations-ID → Zeitstempel (ms) der Erledigung */
   completedSteps: Record<string, number>;
   professions: {
@@ -34,7 +38,8 @@ export interface ProgressState {
 
 export const DEFAULT_STATE: ProgressState = Object.freeze({
   version: SCHEMA_VERSION,
-  settings: { faction: "alliance", classId: "druid", raceId: null, level: 1, currentZoneId: null },
+  settings: { faction: "alliance", classId: "druid", raceId: null, level: 1, xp: 0, currentZoneId: null },
+  session: null,
   completedSteps: {},
   professions: { primary: [], secondary: {} },
   notes: "",
@@ -46,12 +51,19 @@ export function createDefaultState(): ProgressState {
 }
 
 const FACTIONS: Faction[] = ["alliance", "horde"];
-const CLASSES: ClassId[] = ["paladin", "priest", "druid"];
+const CLASSES: ClassId[] = ["paladin", "priest", "druid", "warlock"];
 const SECONDARY: SecondaryProfessionId[] = ["cooking", "fishing", "firstaid"];
 
 export function clampLevel(level: number): number {
   if (!Number.isFinite(level)) return 1;
   return Math.min(60, Math.max(1, Math.round(level)));
+}
+
+/** Begrenzt XP auf 0 bis (benötigte XP der Stufe − 1). */
+export function clampXp(xp: number, level: number): number {
+  if (!Number.isFinite(xp)) return 0;
+  const max = xpForLevel(level);
+  return max === 0 ? 0 : Math.min(max - 1, Math.max(0, Math.round(xp)));
 }
 
 export function clampSkill(skill: number): number {
@@ -86,8 +98,19 @@ export function parseProgress(input: unknown): ParseResult {
     state.settings.raceId = settings.raceId as RaceId;
   }
   if (typeof settings.level === "number") state.settings.level = clampLevel(settings.level);
+  if (typeof settings.xp === "number") state.settings.xp = clampXp(settings.xp, state.settings.level);
   if (typeof settings.currentZoneId === "string" && zoneById.has(settings.currentZoneId)) {
     state.settings.currentZoneId = settings.currentZoneId;
+  }
+
+  if (
+    isRecord(input.session) &&
+    typeof input.session.startedAt === "number" &&
+    typeof input.session.startTotalXp === "number" &&
+    Number.isFinite(input.session.startedAt) &&
+    Number.isFinite(input.session.startTotalXp)
+  ) {
+    state.session = { startedAt: input.session.startedAt, startTotalXp: Math.max(0, input.session.startTotalXp) };
   }
 
   if (isRecord(input.completedSteps)) {
